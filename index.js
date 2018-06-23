@@ -203,8 +203,8 @@ async.timesSeries(
               });
             },
             fn: function() {
-              last = last.prev;
-              if (last) delete last.next;
+              if (last.prev) last = last.prev;
+              if (last.next) delete last.next;
             }
           });
         })();
@@ -272,8 +272,10 @@ async.timesSeries(
               });
             },
             fn: function() {
-              first = first.next;
-              delete first.prev;
+              if (first.next) {
+                first = first.next;
+                delete first.prev;
+              }
             }
           });
         })();
@@ -344,8 +346,18 @@ async.timesSeries(
               });
             },
             fn: function() {
-              middle.prev.next = middle.next;
-              middle.next.prev = middle.prev;
+              if (middle.prev && middle.next) {
+                middle.prev.next = middle.next;
+                middle.next.prev = middle.prev;
+              } else if (!middle.prev && middle.next) {
+                first = middle.next;
+                delete middle.next.prev;
+              } else if (middle.prev && !middle.next) {
+                last = middle.prev;
+                delete middle.prev.next;
+              } else {
+                first = last = undefined;
+              }
             }
           });
         })();
@@ -416,9 +428,23 @@ async.timesSeries(
               });
             },
             fn: function() {
-              var created = { data: 0, prev: middle.prev, next: middle };
-              middle.prev.next = created;
-              middle.prev = created;
+              var created = { data: 'test' };
+              if (middle.prev && middle.next) {
+                created.prev = middle.prev;
+                created.next = middle;
+                middle.prev.next = created;
+                middle.prev = created;
+              } else if (!middle.prev && middle.next) {
+                first = created;
+                created.next = middle;
+                middle.prev = created;
+              } else if (middle.prev && !middle.next) {
+                last = created;
+                created.prev = middle;
+                middle.next = created;
+              } else {
+                first = last = created;
+              }
             }
           });
         })();
