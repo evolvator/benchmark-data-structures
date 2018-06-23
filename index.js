@@ -1,75 +1,106 @@
 var Benchmark = require('benchmark');
 var tb = require('travis-benchmark');
 var _ = require('lodash');
-var Chance = require('chance');
-var chance = new Chance();
-
-function generateTree(current, depth, width) {
-    if (depth) {
-        for (var i = 0; i < width; i++) {
-            var key = chance.word();
-            current[key] = {};
-            generateTree(current[key], depth - 1, width);
-        }
-    }
-    return current;
-}
 
 var async = require('async');
-var foreach = require('foreach');
-var arrayEach = require('array-each');
 
 async.timesSeries(
-  5,
+  15,
   function(t, next) {
-    var tree = generateTree({}, t + 1, 5);
-    var suite = new Benchmark.Suite(`tree depth: ${t + 1}, width: 5`);
+    var count = Math.pow(2, t);
     
-    function recursiveTraverse(current, handler) {
-      handler(current);
-      // fastest based on https://github.com/evolvator/benchmark-each-by-object
-      if (typeof(current) === 'object') {
-        if (Array.isArray(current)) {
-          for (var i = 0; i < current.length; i++) {
-            recursiveTraverse(current[i], handler);
-          };
-        } else {
-          var array = Object.keys(current);
-          for (var i = 0; i < array.length; i++) {
-            recursiveTraverse(current[array[i]], handler);
-          };
-        }
-      }
-    };
-    
-    suite.add('recursive', function() {
-      recursiveTraverse(tree, function(current) {});
+    async.series([
+      function(next) {
+        var suite = new Benchmark.Suite(`push`);
+        
+        (function() {
+          var array;
+          array = _.times(count, function(t) { return t; });
+          suite.add({
+            name: 'array',
+            onCycle: function() {
+              array = _.times(count, function(t) { return t; });
+            },
+            fn: function() {
+              array.push('test');
+            }
+          });
+        })();
+        
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              object[object.length] = 'test';
+              object.length++;
+            }
+          });
+        })();
+        
+        (function() {
+          var first, last;
+          first = last = { data: 0 };
+          _.times(count - 1, function(t) {
+            last.next = { data: t + 1 };
+            last = last.next;
+          });
+          suite.add({
+            name: 'linked list',
+            onCycle: function() {
+              first = last = { data: 0 };
+              _.times(count - 1, function(t) {
+                last.next = { data: t + 1 };
+                last = last.next;
+              });
+            },
+            fn: function() {
+              last.next = { data: 'test' };
+              last = last.next;
+            }
+          });
+        })();
+        
+        (function() {
+          var first, last;
+          first = last = { data: 0 };
+          _.times(count - 1, function(t) {
+            last.next = { data: t + 1, prev: last };
+            last = last.next;
+          });
+          suite.add({
+            name: 'doubly linked list',
+            onCycle: function() {
+              first = last = { data: 0 };
+              _.times(count - 1, function(t) {
+                last.next = { data: t + 1, prev: last };
+                last = last.next;
+              });
+            },
+            fn: function() {
+              last.next = { data: 'test', prev: last };
+              last = last.next;
+            }
+          });
+        })();
+        
+        tb.wrapSuite(suite, function () { next(); });
+        suite.run({ async: true });
+      },
+    ], function() {
+      next();
     });
-    
-    function stackTraverse(current, handler) {
-      var stack = [{ data: current, index: -1, keys: typeof(current) === 'object' && !Array.isArray(current) ? Object.keys(current) : undefined }];
-      while (stack.length) {
-        var pointer = stack[stack.length - 1];
-        if (pointer.index === -1) handler(pointer, stack);
-        pointer.index++;
-        if (typeof(pointer.data) === 'object') {
-          var key = pointer.keys ? pointer.keys[pointer.index] : pointer.index;
-          if (pointer.data.hasOwnProperty(pointer.keys[pointer.index])) {
-            stack.push({ data: pointer.data[key], index: -1, key: key, keys: typeof(pointer.data[key]) === 'object' && !Array.isArray(pointer.data[key]) ? Object.keys(pointer.data[key]) : undefined });
-          } else {
-            stack.pop();
-          }
-        } else {
-          stack.pop();
-        }
-      }
-    };
-    
-    suite.add('stack', function() {
-      stackTraverse(tree, function(current) {});
-    });
-
-    tb.wrapSuite(suite, () => next());
-    suite.run({ async: true });
   }
 );
