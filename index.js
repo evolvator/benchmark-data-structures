@@ -11,7 +11,7 @@ async.timesSeries(
     
     async.series([
       function(next) {
-        var suite = new Benchmark.Suite(`push`);
+        var suite = new Benchmark.Suite(`push operation, ${count} size`);
         
         (function() {
           var array;
