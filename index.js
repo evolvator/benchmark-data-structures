@@ -11,7 +11,7 @@ async.timesSeries(
     
     async.series([
       function(next) {
-        var suite = new Benchmark.Suite(`push operation, ${count} size`);
+        var suite = new Benchmark.Suite(`push, ${count} size`);
         
         (function() {
           var array;
@@ -54,21 +54,67 @@ async.timesSeries(
           var first, last;
           first = last = { data: 0 };
           _.times(count - 1, function(t) {
-            last.next = { data: t + 1 };
+            last.next = { data: t + 1, prev: last };
             last = last.next;
           });
           suite.add({
-            name: 'linked list',
+            name: 'doubly linked list',
             onCycle: function() {
               first = last = { data: 0 };
               _.times(count - 1, function(t) {
-                last.next = { data: t + 1 };
+                last.next = { data: t + 1, prev: last };
                 last = last.next;
               });
             },
             fn: function() {
-              last.next = { data: 'test' };
+              last.next = { data: 'test', prev: last };
               last = last.next;
+            }
+          });
+        })();
+        
+        tb.wrapSuite(suite, function () { next(); });
+        suite.run({ async: true });
+      },
+      function(next) {
+        var suite = new Benchmark.Suite(`unshift, ${count} size`);
+        
+        (function() {
+          var array;
+          array = _.times(count, function(t) { return t; });
+          suite.add({
+            name: 'array',
+            onCycle: function() {
+              array = _.times(count, function(t) { return t; });
+            },
+            fn: function() {
+              array.unshift('test');
+            }
+          });
+        })();
+        
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              for (var i = object.length - 1; i >= 0; i--) {
+                object[i + 1] = object[i];
+              }
+              object[0] = 'test';
+              object.length++;
             }
           });
         })();
@@ -90,8 +136,144 @@ async.timesSeries(
               });
             },
             fn: function() {
-              last.next = { data: 'test', prev: last };
-              last = last.next;
+              var created = { data: 'test', next: first };
+              first.prev = created;
+              first = created;
+            }
+          });
+        })();
+        
+        tb.wrapSuite(suite, function () { next(); });
+        suite.run({ async: true });
+      },
+      function(next) {
+        var suite = new Benchmark.Suite(`pop, ${count} size`);
+        
+        (function() {
+          var array;
+          array = _.times(count, function(t) { return t; });
+          suite.add({
+            name: 'array',
+            onCycle: function() {
+              array = _.times(count, function(t) { return t; });
+            },
+            fn: function() {
+              array.pop();
+            }
+          });
+        })();
+        
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              delete object[object.length - 1];
+              object.length--;
+            }
+          });
+        })();
+        
+        (function() {
+          var first, last;
+          first = last = { data: 0 };
+          _.times(count - 1, function(t) {
+            last.next = { data: t + 1, prev: last };
+            last = last.next;
+          });
+          suite.add({
+            name: 'doubly linked list',
+            onCycle: function() {
+              first = last = { data: 0 };
+              _.times(count - 1, function(t) {
+                last.next = { data: t + 1, prev: last };
+                last = last.next;
+              });
+            },
+            fn: function() {
+              last = last.prev;
+              delete last.next;
+            }
+          });
+        })();
+        
+        tb.wrapSuite(suite, function () { next(); });
+        suite.run({ async: true });
+      },
+      function(next) {
+        var suite = new Benchmark.Suite(`shift, ${count} size`);
+        
+        (function() {
+          var array;
+          array = _.times(count, function(t) { return t; });
+          suite.add({
+            name: 'array',
+            onCycle: function() {
+              array = _.times(count, function(t) { return t; });
+            },
+            fn: function() {
+              array.shift();
+            }
+          });
+        })();
+        
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              delete object[0];
+              for (var i = 1; i < object.length - 1; i++) {
+                object[i - 1] = object[i];
+              }
+              object.length--;
+            }
+          });
+        })();
+        
+        (function() {
+          var first, last;
+          first = last = { data: 0 };
+          _.times(count - 1, function(t) {
+            last.next = { data: t + 1, prev: last };
+            last = last.next;
+          });
+          suite.add({
+            name: 'doubly linked list',
+            onCycle: function() {
+              first = last = { data: 0 };
+              _.times(count - 1, function(t) {
+                last.next = { data: t + 1, prev: last };
+                last = last.next;
+              });
+            },
+            fn: function() {
+              first = first.next;
+              delete first.prev;
             }
           });
         })();
