@@ -281,6 +281,151 @@ async.timesSeries(
         tb.wrapSuite(suite, function () { next(); });
         suite.run({ async: true });
       },
+      function(next) {
+        var suite = new Benchmark.Suite(`splice middle -1, ${count} size`);
+        var middleIndex = Math.round(count / 2);
+        
+        (function() {
+          var array;
+          array = _.times(count, function(t) { return t; });
+          suite.add({
+            name: 'array',
+            onCycle: function() {
+              array = _.times(count, function(t) { return t; });
+            },
+            fn: function() {
+              array.splice(middleIndex, 1);
+            }
+          });
+        })();
+        
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              delete object[middleIndex];
+              for (var i = middleIndex + 1; i < object.length - 1; i++) {
+                object[i - 1] = object[i];
+              }
+              object.length--;
+            }
+          });
+        })();
+        
+        (function() {
+          var first, last, middle;
+          first = last = middle = { data: 0 };
+          _.times(count - 1, function(t) {
+            last.next = { data: t + 1, prev: last };
+            last = last.next;
+            if (t === middleIndex) middle = last;
+          });
+          suite.add({
+            name: 'doubly linked list',
+            onCycle: function() {
+              first = last = middle = { data: 0 };
+              _.times(count - 1, function(t) {
+                last.next = { data: t + 1, prev: last };
+                last = last.next;
+                if (t === middleIndex) middle = last;
+              });
+            },
+            fn: function() {
+              middle.prev.next = middle.next;
+              middle.next.prev = middle.prev;
+            }
+          });
+        })();
+        
+        tb.wrapSuite(suite, function () { next(); });
+        suite.run({ async: true });
+      },
+      function(next) {
+        var suite = new Benchmark.Suite(`splice middle +1, ${count} size`);
+        var middleIndex = Math.round(count / 2);
+        
+        (function() {
+          var array;
+          array = _.times(count, function(t) { return t; });
+          suite.add({
+            name: 'array',
+            onCycle: function() {
+              array = _.times(count, function(t) { return t; });
+            },
+            fn: function() {
+              array.splice(middleIndex, 0, 'test');
+            }
+          });
+        })();
+        
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              for (var i = object.length - 1; i >= middleIndex; i--) {
+                object[i + 1] = object[i];
+              }
+              object[middleIndex] = 'test';
+              object.length++;
+            }
+          });
+        })();
+        
+        (function() {
+          var first, last, middle;
+          first = last = middle = { data: 0 };
+          _.times(count - 1, function(t) {
+            last.next = { data: t + 1, prev: last };
+            last = last.next;
+            if (t === middleIndex) middle = last;
+          });
+          suite.add({
+            name: 'doubly linked list',
+            onCycle: function() {
+              first = last = middle = { data: 0 };
+              _.times(count - 1, function(t) {
+                last.next = { data: t + 1, prev: last };
+                last = last.next;
+                if (t === middleIndex) middle = last;
+              });
+            },
+            fn: function() {
+              var created = { data: 0, prev: middle.prev, next: middle };
+              middle.prev.next = created;
+              middle.prev = created;
+            }
+          });
+        })();
+        
+        tb.wrapSuite(suite, function () { next(); });
+        suite.run({ async: true });
+      },
     ], function() {
       next();
     });
