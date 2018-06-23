@@ -204,7 +204,7 @@ async.timesSeries(
             },
             fn: function() {
               last = last.prev;
-              delete last.next;
+              if (last) delete last.next;
             }
           });
         })();
