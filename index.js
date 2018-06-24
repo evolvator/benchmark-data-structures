@@ -11,7 +11,7 @@ async.timesSeries(
     
     async.series([
       function(next) {
-        var suite = new Benchmark.Suite(`push, ${count} size`);
+        var suite = new Benchmark.Suite(`^${t} *${count} push`);
         
         (function() {
           var array;
@@ -77,7 +77,7 @@ async.timesSeries(
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`unshift, ${count} size`);
+        var suite = new Benchmark.Suite(`^${t} *${count} unshift`);
         
         (function() {
           var array;
@@ -147,7 +147,7 @@ async.timesSeries(
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`pop, ${count} size`);
+        var suite = new Benchmark.Suite(`^${t} *${count} pop`);
         
         (function() {
           var array;
@@ -213,7 +213,7 @@ async.timesSeries(
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`shift, ${count} size`);
+        var suite = new Benchmark.Suite(`^${t} *${count} shift`);
         
         (function() {
           var array;
@@ -284,7 +284,7 @@ async.timesSeries(
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`splice middle -1, ${count} size`);
+        var suite = new Benchmark.Suite(`^${t} *${count} splice middle -`);
         var middleIndex = Math.round(count / 2);
         
         (function() {
@@ -366,7 +366,7 @@ async.timesSeries(
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`splice middle +1, ${count} size`);
+        var suite = new Benchmark.Suite(`^${t} *${count} splice middle +`);
         var middleIndex = Math.round(count / 2);
         
         (function() {
