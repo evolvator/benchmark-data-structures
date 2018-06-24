@@ -4,14 +4,16 @@ var _ = require('lodash');
 
 var async = require('async');
 
+var LinkedList = require('linked-list');
+
 async.timesSeries(
-  15,
+  14,
   function(t, next) {
-    var count = Math.pow(2, t);
+    var count = Math.pow(2, t + 1);
     
     async.series([
       function(next) {
-        var suite = new Benchmark.Suite(`^${t} *${count} push`);
+        var suite = new Benchmark.Suite(`^${t + 1} *${count} push`);
         
         (function() {
           var array;
@@ -73,11 +75,27 @@ async.timesSeries(
           });
         })();
         
+        (function() {
+          var list;
+          list = new LinkedList();
+          _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+            },
+            fn: function() {
+              list.append(new LinkedList.Item('test'));
+            }
+          });
+        })();
+        
         tb.wrapSuite(suite, function () { next(); });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`^${t} *${count} unshift`);
+        var suite = new Benchmark.Suite(`^${t + 1} *${count} unshift`);
         
         (function() {
           var array;
@@ -143,11 +161,27 @@ async.timesSeries(
           });
         })();
         
+        (function() {
+          var list;
+          list = new LinkedList();
+          _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+            },
+            fn: function() {
+              list.prepend(new LinkedList.Item('test'));
+            }
+          });
+        })();
+        
         tb.wrapSuite(suite, function () { next(); });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`^${t} *${count} pop`);
+        var suite = new Benchmark.Suite(`^${t + 1} *${count} pop`);
         
         (function() {
           var array;
@@ -209,11 +243,27 @@ async.timesSeries(
           });
         })();
         
+        (function() {
+          var list;
+          list = new LinkedList();
+          _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+            },
+            fn: function() {
+              if (list.tail) list.tail.detach();
+            }
+          });
+        })();
+        
         tb.wrapSuite(suite, function () { next(); });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`^${t} *${count} shift`);
+        var suite = new Benchmark.Suite(`^${t + 1} *${count} shift`);
         
         (function() {
           var array;
@@ -280,11 +330,27 @@ async.timesSeries(
           });
         })();
         
+        (function() {
+          var list;
+          list = new LinkedList();
+          _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              _.times(count - 1, function(t) { list.append(new LinkedList.Item(t)); });
+            },
+            fn: function() {
+              if (list.head) list.head.detach();
+            }
+          });
+        })();
+        
         tb.wrapSuite(suite, function () { next(); });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`^${t} *${count} splice middle -`);
+        var suite = new Benchmark.Suite(`^${t + 1} *${count} splice middle -`);
         var middleIndex = Math.round(count / 2);
         
         (function() {
@@ -362,11 +428,33 @@ async.timesSeries(
           });
         })();
         
+        (function() {
+          var list, middle;
+          list = new LinkedList();
+          _.times(count - 1, function(t) {
+            list.append(new LinkedList.Item(t));
+            if (t === middleIndex) middle = list.tail;
+          });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              _.times(count - 1, function(t) {
+                list.append(new LinkedList.Item(t));
+                if (t === middleIndex) middle = list.tail;
+              });
+            },
+            fn: function() {
+              if (middle) middle.detach();
+            }
+          });
+        })();
+        
         tb.wrapSuite(suite, function () { next(); });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`^${t} *${count} splice middle +`);
+        var suite = new Benchmark.Suite(`^${t + 1} *${count} splice middle +`);
         var middleIndex = Math.round(count / 2);
         
         (function() {
@@ -445,6 +533,28 @@ async.timesSeries(
               } else {
                 first = last = created;
               }
+            }
+          });
+        })();
+        
+        (function() {
+          var list, middle;
+          list = new LinkedList();
+          _.times(count - 1, function(t) {
+            list.append(new LinkedList.Item(t));
+            if (t === middleIndex) middle = list.tail;
+          });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              _.times(count - 1, function(t) {
+                list.append(new LinkedList.Item(t));
+                if (t === middleIndex) middle = list.tail;
+              });
+            },
+            fn: function() {
+              if (middle) middle.append(new LinkedList.Item('test'));
             }
           });
         })();
