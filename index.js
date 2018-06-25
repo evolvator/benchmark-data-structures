@@ -613,6 +613,39 @@ async.timesSeries(
           });
         })();
         
+        // object
+        (function() {
+          var object;
+          object = { length: 0 };
+          _.times(count, function(t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function() {
+              object = { length: 0 };
+              _.times(count, function(t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function() {
+              var a, b, i, t;
+              for (i = 0; i < object.length; i++) {
+                for (a = 0; a < object.length - 1; a++) {
+                  b = a + 1;
+                  if (object[a] < object[b]) {
+                    t = object[a];
+                    object[a] = object[b];
+                    object[b] = t;
+                  }
+                }
+              }
+            }
+          });
+        })();
+        
         // linked-list@1.0.4
         (function() {
           var list;
@@ -627,16 +660,16 @@ async.timesSeries(
             fn: function() {
               var a, b, i;
               for (i = 0; i < count; i++) {
-                  for (a = list.head; a; a = a.next) {
-                      if (a.next) {
-                          b = a.next;
-                          if (a.value < b.value) {
-                              a.detach();
-                              b.append(a);
-                              a = b;
-                          }
-                      }
+                for (a = list.head; a; a = a.next) {
+                  if (a.next) {
+                    b = a.next;
+                    if (a.value < b.value) {
+                      a.detach();
+                      b.append(a);
+                      a = b;
+                    }
                   }
+                }
               }
             }
           });
