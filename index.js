@@ -438,18 +438,10 @@ async.timesSeries(
               });
             },
             fn: function() {
-              if (middle.prev && middle.next) {
-                middle.prev.next = middle.next;
-                middle.next.prev = middle.prev;
-              } else if (!middle.prev && middle.next) {
-                first = middle.next;
-                delete middle.next.prev;
-              } else if (middle.prev && !middle.next) {
-                last = middle.prev;
-                delete middle.prev.next;
-              } else {
-                first = last = undefined;
-              }
+              if (middle.prev) middle.prev.next = middle.next;
+              if (middle.next) middle.next.prev = middle.prev;
+              if (middle === first) first = middle.next;
+              if (middle === last) last = middle.prev;
             }
           });
         })();
@@ -546,23 +538,10 @@ async.timesSeries(
               });
             },
             fn: function() {
-              var created = { data: 'test' };
-              if (middle.prev && middle.next) {
-                created.prev = middle.prev;
-                created.next = middle;
-                middle.prev.next = created;
-                middle.prev = created;
-              } else if (!middle.prev && middle.next) {
-                first = created;
-                created.next = middle;
-                middle.prev = created;
-              } else if (middle.prev && !middle.next) {
-                last = created;
-                created.prev = middle;
-                middle.next = created;
-              } else {
-                first = last = created;
-              }
+              var created = { data: 'test', prev: middle.prev, next: middle };
+              if (created.prev) created.prev.next = created;
+              middle.prev = created;
+              if (middle === first) first = created;
             }
           });
         })();
