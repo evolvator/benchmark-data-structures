@@ -69,6 +69,10 @@ async.timesSeries(
             last.next = { data: t + 1, prev: last };
             last = last.next;
           });
+          var action = function() {
+            last.next = { data: 'test', prev: last };
+            last = last.next;
+          };
           suite.add({
             name: 'doubly linked list',
             onCycle: function() {
@@ -79,8 +83,7 @@ async.timesSeries(
               });
             },
             fn: function() {
-              last.next = { data: 'test', prev: last };
-              last = last.next;
+              action();
             }
           });
         })();
@@ -158,6 +161,11 @@ async.timesSeries(
             last.next = { data: t + 1, prev: last };
             last = last.next;
           });
+          var action = function() {
+            var created = { data: 'test', next: first };
+            first.prev = created;
+            first = created;
+          };
           suite.add({
             name: 'doubly linked list',
             onCycle: function() {
@@ -168,9 +176,7 @@ async.timesSeries(
               });
             },
             fn: function() {
-              var created = { data: 'test', next: first };
-              first.prev = created;
-              first = created;
+              action();
             }
           });
         })();
@@ -245,6 +251,10 @@ async.timesSeries(
             last.next = { data: t + 1, prev: last };
             last = last.next;
           });
+          var action = function() {
+            if (last.prev) last = last.prev;
+            if (last.next) delete last.next;
+          };
           suite.add({
             name: 'doubly linked list',
             onCycle: function() {
@@ -255,8 +265,7 @@ async.timesSeries(
               });
             },
             fn: function() {
-              if (last.prev) last = last.prev;
-              if (last.next) delete last.next;
+              action();
             }
           });
         })();
@@ -334,6 +343,12 @@ async.timesSeries(
             last.next = { data: t + 1, prev: last };
             last = last.next;
           });
+          var action = function() {
+            if (first.next) {
+              first = first.next;
+              delete first.prev;
+            }
+          };
           suite.add({
             name: 'doubly linked list',
             onCycle: function() {
@@ -344,10 +359,7 @@ async.timesSeries(
               });
             },
             fn: function() {
-              if (first.next) {
-                first = first.next;
-                delete first.prev;
-              }
+              action();
             }
           });
         })();
@@ -427,6 +439,12 @@ async.timesSeries(
             last = last.next;
             if (t === middleIndex) middle = last;
           });
+          var action = function() {
+            if (middle.prev) middle.prev.next = middle.next;
+            if (middle.next) middle.next.prev = middle.prev;
+            if (middle === first) first = middle.next;
+            if (middle === last) last = middle.prev;
+          };
           suite.add({
             name: 'doubly linked list',
             onCycle: function() {
@@ -438,10 +456,7 @@ async.timesSeries(
               });
             },
             fn: function() {
-              if (middle.prev) middle.prev.next = middle.next;
-              if (middle.next) middle.next.prev = middle.prev;
-              if (middle === first) first = middle.next;
-              if (middle === last) last = middle.prev;
+              action();
             }
           });
         })();
@@ -527,6 +542,12 @@ async.timesSeries(
             last = last.next;
             if (t === middleIndex) middle = last;
           });
+          var action = function() {
+            var created = { data: 'test', prev: middle.prev, next: middle };
+            if (created.prev) created.prev.next = created;
+            middle.prev = created;
+            if (middle === first) first = created;
+          };
           suite.add({
             name: 'doubly linked list',
             onCycle: function() {
@@ -538,10 +559,7 @@ async.timesSeries(
               });
             },
             fn: function() {
-              var created = { data: 'test', prev: middle.prev, next: middle };
-              if (created.prev) created.prev.next = created;
-              middle.prev = created;
-              if (middle === first) first = created;
+              action();
             }
           });
         })();
@@ -573,6 +591,8 @@ async.timesSeries(
         suite.run({ async: true });
       },
       function(next) {
+        if (count > 9) return next();
+        
         var suite = new Benchmark.Suite(`sort x${count} pow${t + 1}`);
         
         // array
