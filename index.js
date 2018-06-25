@@ -6,7 +6,7 @@ var async = require('async');
 
 var LinkedList = require('linked-list');
 
-class Item extends Item {
+class Item extends LinkedList.Item {
     constructor(value) {
         super();
         this.value = value;
