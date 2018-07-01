@@ -15,7 +15,7 @@ class Item extends LinkedList.Item {
   }
 }
 
-async.timesSeries(15, function(t, next) {
+async.timesSeries(12, function(t, next) {
   var count = Math.pow(2, t + 1);
 
   async.series(
