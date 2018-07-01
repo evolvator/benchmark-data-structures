@@ -9,36 +9,39 @@ var async = require('async');
 var LinkedList = require('linked-list');
 
 class Item extends LinkedList.Item {
-    constructor(value) {
-        super();
-        this.value = value;
-    }
+  constructor(value) {
+    super();
+    this.value = value;
+  }
 }
 
-async.timesSeries(
-  14,
-  function(t, next) {
-    var count = Math.pow(2, t + 1);
-    
-    async.series([
+async.timesSeries(15, function(t, next) {
+  var count = Math.pow(2, t + 1);
+
+  async.series(
+    [
       function(next) {
         var suite = new Benchmark.Suite(`push x${count} pow${t + 1}`);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
+          array = _.times(count, function(t) {
+            return t;
+          });
           suite.add({
             name: 'array',
             onCycle: function() {
-              array = _.times(count, function(t) { return t; });
+              array = _.times(count, function(t) {
+                return t;
+              });
             },
             fn: function() {
               array.push('test');
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
@@ -59,10 +62,31 @@ async.timesSeries(
             fn: function() {
               object[object.length] = 'test';
               object.length++;
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'Map number',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              map.set(map.size, 'test');
+            },
+          });
+        })();
+
         // linked list
         (function() {
           var first, last;
@@ -86,48 +110,58 @@ async.timesSeries(
             },
             fn: function() {
               action();
-            }
+            },
           });
         })();
-        
+
         // linked-list@1.0.4
         (function() {
           var list;
           list = new LinkedList();
-          _.times(count, function(t) { list.append(new Item(t)); });
+          _.times(count, function(t) {
+            list.append(new Item(t));
+          });
           suite.add({
             name: 'linked-list@1.0.4',
             onCycle: function() {
               list = new LinkedList();
-              _.times(count, function(t) { list.append(new Item(t)); });
+              _.times(count, function(t) {
+                list.append(new Item(t));
+              });
             },
             fn: function() {
               list.append(new Item('test'));
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
       function(next) {
         var suite = new Benchmark.Suite(`unshift x${count} pow${t + 1}`);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
+          array = _.times(count, function(t) {
+            return t;
+          });
           suite.add({
             name: 'array',
             onCycle: function() {
-              array = _.times(count, function(t) { return t; });
+              array = _.times(count, function(t) {
+                return t;
+              });
             },
             fn: function() {
               array.unshift('test');
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
@@ -151,10 +185,35 @@ async.timesSeries(
               }
               object[0] = 'test';
               object.length++;
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              var size = map.size;
+              for (var i = size - 1; i >= 0; i--) {
+                map.set(i + 1, map[i]);
+              }
+              map.set(0, 'test');
+            },
+          });
+        })();
+
         // linked list
         (function() {
           var first, last;
@@ -179,48 +238,58 @@ async.timesSeries(
             },
             fn: function() {
               action();
-            }
+            },
           });
         })();
-        
+
         // linked-list@1.0.4
         (function() {
           var list;
           list = new LinkedList();
-          _.times(count, function(t) { list.append(new Item(t)); });
+          _.times(count, function(t) {
+            list.append(new Item(t));
+          });
           suite.add({
             name: 'linked-list@1.0.4',
             onCycle: function() {
               list = new LinkedList();
-              _.times(count, function(t) { list.append(new Item(t)); });
+              _.times(count, function(t) {
+                list.append(new Item(t));
+              });
             },
             fn: function() {
               list.prepend(new Item('test'));
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
       function(next) {
         var suite = new Benchmark.Suite(`pop x${count} pow${t + 1}`);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
+          array = _.times(count, function(t) {
+            return t;
+          });
           suite.add({
             name: 'array',
             onCycle: function() {
-              array = _.times(count, function(t) { return t; });
+              array = _.times(count, function(t) {
+                return t;
+              });
             },
             fn: function() {
               array.pop();
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
@@ -239,12 +308,35 @@ async.timesSeries(
               });
             },
             fn: function() {
+              var result = object[object.length - 1];
               delete object[object.length - 1];
               object.length--;
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              var result = map.get(map.size - 1);
+              map.delete(map.size - 1);
+            },
+          });
+        })();
+
         // linked list
         (function() {
           var first, last;
@@ -268,48 +360,58 @@ async.timesSeries(
             },
             fn: function() {
               action();
-            }
+            },
           });
         })();
-        
+
         // linked-list@1.0.4
         (function() {
           var list;
           list = new LinkedList();
-          _.times(count, function(t) { list.append(new Item(t)); });
+          _.times(count, function(t) {
+            list.append(new Item(t));
+          });
           suite.add({
             name: 'linked-list@1.0.4',
             onCycle: function() {
               list = new LinkedList();
-              _.times(count, function(t) { list.append(new Item(t)); });
+              _.times(count, function(t) {
+                list.append(new Item(t));
+              });
             },
             fn: function() {
               if (list.tail) list.tail.detach();
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
       function(next) {
         var suite = new Benchmark.Suite(`shift x${count} pow${t + 1}`);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
+          array = _.times(count, function(t) {
+            return t;
+          });
           suite.add({
             name: 'array',
             onCycle: function() {
-              array = _.times(count, function(t) { return t; });
+              array = _.times(count, function(t) {
+                return t;
+              });
             },
             fn: function() {
               array.shift();
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
@@ -328,15 +430,42 @@ async.timesSeries(
               });
             },
             fn: function() {
+              var result = object[0];
               delete object[0];
               for (var i = 1; i < object.length - 1; i++) {
                 object[i - 1] = object[i];
               }
               object.length--;
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              var result = map.get(0);
+              map.delete(0);
+              var size = map.size;
+              for (var i = 1; i < size - 1; i++) {
+                map.set(i - 1, map.get(i));
+              }
+            },
+          });
+        })();
+
         // linked list
         (function() {
           var first, last;
@@ -362,53 +491,66 @@ async.timesSeries(
             },
             fn: function() {
               action();
-            }
+            },
           });
         })();
-        
+
         // linked-list@1.0.4
         (function() {
           var list;
           list = new LinkedList();
-          _.times(count, function(t) { list.append(new Item(t)); });
+          _.times(count, function(t) {
+            list.append(new Item(t));
+          });
           suite.add({
             name: 'linked-list@1.0.4',
             onCycle: function() {
               list = new LinkedList();
-              _.times(count, function(t) { list.append(new Item(t)); });
+              _.times(count, function(t) {
+                list.append(new Item(t));
+              });
             },
             fn: function() {
               if (list.head) list.head.detach();
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`splice middle - x${count} pow${t + 1}`);
+        var suite = new Benchmark.Suite(
+          `splice middle - x${count} pow${t + 1}`,
+        );
         var middleIndex = Math.round(count / 2);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
+          array = _.times(count, function(t) {
+            return t;
+          });
           suite.add({
             name: 'array',
             onCycle: function() {
-              array = _.times(count, function(t) { return t; });
+              array = _.times(count, function(t) {
+                return t;
+              });
             },
             fn: function() {
               array.splice(middleIndex, 1);
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
           object = { length: 0 };
+          var middleIndex = Math.round(count / 2);
           _.times(count, function(t) {
             object[t] = t;
             object.length++;
@@ -428,10 +570,35 @@ async.timesSeries(
                 object[i - 1] = object[i];
               }
               object.length--;
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              var size = map.size;
+              map.delete(middleIndex);
+              for (var i = middleIndex + 1; i < size - 1; i++) {
+                map.set(i - 1, map.get(i));
+              }
+            },
+          });
+        })();
+
         // linked list
         (function() {
           var first, last, middle;
@@ -459,10 +626,10 @@ async.timesSeries(
             },
             fn: function() {
               action();
-            }
+            },
           });
         })();
-        
+
         // linked-list@1.0.4
         (function() {
           var list, middle;
@@ -482,32 +649,40 @@ async.timesSeries(
             },
             fn: function() {
               if (middle) middle.detach();
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
       function(next) {
-        var suite = new Benchmark.Suite(`splice middle + x${count} pow${t + 1}`);
+        var suite = new Benchmark.Suite(
+          `splice middle + x${count} pow${t + 1}`,
+        );
         var middleIndex = Math.round(count / 2);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
+          array = _.times(count, function(t) {
+            return t;
+          });
           suite.add({
             name: 'array',
             onCycle: function() {
-              array = _.times(count, function(t) { return t; });
+              array = _.times(count, function(t) {
+                return t;
+              });
             },
             fn: function() {
               array.splice(middleIndex, 0, 'test');
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
@@ -531,10 +706,35 @@ async.timesSeries(
               }
               object[middleIndex] = 'test';
               object.length++;
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              var size = map.size;
+              for (var i = size - 1; i >= middleIndex; i--) {
+                map.set(i + 1, map.get(i));
+              }
+              map.set(middleIndex, 'test');
+            },
+          });
+        })();
+
         // linked list
         (function() {
           var first, last, middle;
@@ -562,10 +762,10 @@ async.timesSeries(
             },
             fn: function() {
               action();
-            }
+            },
           });
         })();
-        
+
         // linked-list@1.0.4
         (function() {
           var list, middle;
@@ -585,23 +785,27 @@ async.timesSeries(
             },
             fn: function() {
               if (middle) middle.append(new Item('test'));
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
       function(next) {
         if (count > 9) return next();
-        
+
         var suite = new Benchmark.Suite(`sort x${count} pow${t + 1}`);
-        
+
         // array
         (function() {
           var array;
-          array = _.times(count, function(t) { return t; });
-          var option = function(a,b) {
+          array = _.times(count, function(t) {
+            return t;
+          });
+          var option = function(a, b) {
             if (a.number > b.number) return 1;
             if (a.number < b.number) return -1;
             return 0;
@@ -610,10 +814,10 @@ async.timesSeries(
             name: 'array',
             fn: function() {
               array.sort(option);
-            }
+            },
           });
         })();
-        
+
         // object
         (function() {
           var object;
@@ -643,20 +847,55 @@ async.timesSeries(
                   }
                 }
               }
-            }
+            },
           });
         })();
-        
+
+        // map
+        (function() {
+          var map;
+          map = new Map();
+          _.times(count, function(t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function() {
+              map = new Map();
+              _.times(count, function(t) {
+                map.set(t, t);
+              });
+            },
+            fn: function() {
+              var a, b, i, t;
+              for (i = 0; i < map.size; i++) {
+                for (a = 0; a < map.size - 1; a++) {
+                  b = a + 1;
+                  if (map.get(a) < map.get(b)) {
+                    t = map.get(a);
+                    map.set(a, map.get(b));
+                    map.set(b, t);
+                  }
+                }
+              }
+            },
+          });
+        })();
+
         // linked-list@1.0.4
         (function() {
           var list;
           list = new LinkedList();
-          _.times(count, function(t) { list.append(new Item(t)); });
+          _.times(count, function(t) {
+            list.append(new Item(t));
+          });
           suite.add({
             name: 'linked-list@1.0.4',
             onCycle: function() {
               list = new LinkedList();
-              _.times(count, function(t) { list.append(new Item(t)); });
+              _.times(count, function(t) {
+                list.append(new Item(t));
+              });
             },
             fn: function() {
               var a, b, i;
@@ -672,15 +911,18 @@ async.timesSeries(
                   }
                 }
               }
-            }
+            },
           });
         })();
-        
-        tb.wrapSuite(suite, function () { next(); });
+
+        tb.wrapSuite(suite, function() {
+          next();
+        });
         suite.run({ async: true });
       },
-    ], function() {
+    ],
+    function() {
       next();
-    });
-  }
-);
+    },
+  );
+});
