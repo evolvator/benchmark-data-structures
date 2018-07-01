@@ -74,7 +74,7 @@ async.timesSeries(12, function(t, next) {
             map.set(t, t);
           });
           suite.add({
-            name: 'Map number',
+            name: 'map',
             onCycle: function() {
               map = new Map();
               _.times(count, function(t) {
@@ -795,8 +795,6 @@ async.timesSeries(12, function(t, next) {
         suite.run({ async: true });
       },
       function(next) {
-        if (count > 9) return next();
-
         var suite = new Benchmark.Suite(`sort x${count} pow${t + 1}`);
 
         // array
@@ -916,6 +914,177 @@ async.timesSeries(12, function(t, next) {
         })();
 
         tb.wrapSuite(suite, function() {
+          next();
+        });
+        suite.run({ async: true });
+      },
+      function (next) {
+        var suite = new Benchmark.Suite(`get x${count} pow${t + 1}`);
+        var key = Math.round(count - 1 / 2);
+
+        // array
+        (function () {
+          var array;
+          array = _.times(count, function (t) {
+            return t;
+          });
+          suite.add({
+            name: 'array',
+            fn: function () {
+              var result = array[key];
+            },
+          });
+        })();
+
+        // object
+        (function () {
+          var object;
+          object = { length: 0 };
+          _.times(count, function (t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            fn: function () {
+              var result = object[key];
+            },
+          });
+        })();
+
+        // map
+        (function () {
+          var map;
+          map = new Map();
+          _.times(count, function (t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            fn: function () {
+              map.get(key);
+            },
+          });
+        })();
+
+        // linked-list@1.0.4
+        (function () {
+          var list;
+          list = new LinkedList();
+          var middleItem;
+          _.times(count, function (t) {
+            var item = new Item(t);
+            list.append(item);
+            if (t === key) middleItem = item;
+          });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            fn: function () {
+              var result = middleItem;
+            },
+          });
+        })();
+
+        tb.wrapSuite(suite, function () {
+          next();
+        });
+        suite.run({ async: true });
+      },
+      function (next) {
+        var suite = new Benchmark.Suite(`set x${count} pow${t + 1}`);
+        var key = Math.round(count - 1 / 2);
+
+        // array
+        (function () {
+          var array;
+          array = _.times(count, function (t) {
+            return t;
+          });
+          suite.add({
+            name: 'array',
+            onCycle: function () {
+              array = _.times(count, function (t) {
+                return t;
+              });
+            },
+            fn: function () {
+              array[key] = 'test';
+            },
+          });
+        })();
+
+        // object
+        (function () {
+          var object;
+          object = { length: 0 };
+          _.times(count, function (t) {
+            object[t] = t;
+            object.length++;
+          });
+          suite.add({
+            name: 'object',
+            onCycle: function () {
+              object = { length: 0 };
+              _.times(count, function (t) {
+                object[t] = t;
+                object.length++;
+              });
+            },
+            fn: function () {
+              object[key] = 'test';
+            },
+          });
+        })();
+
+        // map
+        (function () {
+          var map;
+          map = new Map();
+          _.times(count, function (t) {
+            map.set(t, t);
+          });
+          suite.add({
+            name: 'map',
+            onCycle: function () {
+              map = new Map();
+              _.times(count, function (t) {
+                map.set(t, t);
+              });
+            },
+            fn: function () {
+              map.set(key, 'test');
+            },
+          });
+        })();
+
+        // linked-list@1.0.4
+        (function () {
+          var list;
+          list = new LinkedList();
+          var middleItem;
+          _.times(count, function (t) {
+            var item = new Item(t);
+            list.append(item);
+            if (t === key) middleItem = item;
+          });
+          suite.add({
+            name: 'linked-list@1.0.4',
+            onCycle: function() {
+              list = new LinkedList();
+              var middleItem;
+              _.times(count, function (t) {
+                var item = new Item(t);
+                list.append(item);
+                if (t === key) middleItem = item;
+              });
+            },
+            fn: function () {
+              middleItem.value = 'test';
+            },
+          });
+        })();
+
+        tb.wrapSuite(suite, function () {
           next();
         });
         suite.run({ async: true });
