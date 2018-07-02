@@ -992,7 +992,7 @@ async.series(
     },
     function (next) {
       var suite = new Benchmark.Suite(`set x${count} pow${t + 1}`);
-      var key = Math.round(count - 1 / 2);
+      var key = Math.round((count - 1) / 2);
 
       // array
       (function () {
