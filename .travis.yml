@@ -10,3 +10,19 @@ install:
   - npm install
 script:
   - npm start
+env:
+  - POW=1
+  - POW=2
+  - POW=3
+  - POW=4
+  - POW=5
+  - POW=6
+  - POW=7
+  - POW=8
+  - POW=9
+  - POW=10
+  - POW=11
+  - POW=12
+  - POW=13
+  - POW=14
+  - POW=15
