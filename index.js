@@ -15,7 +15,7 @@ class Item extends LinkedList.Item {
   }
 }
 
-var t = process && process.env && process.env.POW ? process.env.POW : 1;
+var t = parseFloat(process && process.env && process.env.POW ? process.env.POW : 1);
 var count = Math.pow(2, t + 1);
 
 async.series(
