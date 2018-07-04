@@ -26,3 +26,16 @@ env:
   - POW=13
   - POW=14
   - POW=15
+  - ACTION = "push"
+  - ACTION = "unshift"
+  - ACTION = "pop"
+  - ACTION = "shift"
+  - ACTION = "splice middle -"
+  - ACTION = "splice middle +"
+  - ACTION = "sort"
+  - ACTION = "get"
+  - ACTION = "set"
+  - TYPE = "object"
+  - TYPE = "map"
+  - TYPE = "linked-list"
+  - TYPE = "linked-list@1.0.4"
