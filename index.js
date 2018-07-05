@@ -23,7 +23,7 @@ var middleIndex = Math.round((count - 1) / 2);
 
 var actions = {
   push: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -40,7 +40,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -62,7 +62,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -81,7 +81,7 @@ var actions = {
         }
       });
     },
-    "linked list": () => {
+    "linked list": (suite) => {
       var first, last;
       first = last = { data: 0 };
       _.times(count - 1, function(t) {
@@ -106,7 +106,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       _.times(count, function(t) {
@@ -127,7 +127,7 @@ var actions = {
     }
   },
   unshift: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -144,7 +144,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -169,7 +169,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -192,7 +192,7 @@ var actions = {
         }
       });
     },
-    "linked list": () => {
+    "linked list": (suite) => {
       var first, last;
       first = last = { data: 0 };
       _.times(count - 1, function(t) {
@@ -218,7 +218,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       _.times(count, function(t) {
@@ -239,7 +239,7 @@ var actions = {
     }
   },
   pop: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -256,7 +256,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -279,7 +279,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -299,7 +299,7 @@ var actions = {
         }
       });
     },
-    "linked list": () => {
+    "linked list": (suite) => {
       var first, last;
       first = last = { data: 0 };
       _.times(count - 1, function(t) {
@@ -324,7 +324,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       _.times(count, function(t) {
@@ -345,7 +345,7 @@ var actions = {
     }
   },
   shift: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -362,7 +362,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -388,7 +388,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -412,7 +412,7 @@ var actions = {
         }
       });
     },
-    "linked list": () => {
+    "linked list": (suite) => {
       var first, last;
       first = last = { data: 0 };
       _.times(count - 1, function(t) {
@@ -439,7 +439,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       _.times(count, function(t) {
@@ -460,7 +460,7 @@ var actions = {
     }
   },
   "splice middle -": {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -477,7 +477,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -502,7 +502,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -525,7 +525,7 @@ var actions = {
         }
       });
     },
-    "linked list": () => {
+    "linked list": (suite) => {
       var first, last, middle;
       first = last = middle = { data: 0 };
       _.times(count - 1, function(t) {
@@ -554,7 +554,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list, middle;
       list = new LinkedList();
       _.times(count - 1, function(t) {
@@ -577,7 +577,7 @@ var actions = {
     }
   },
   "splice middle +": {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -594,7 +594,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -619,7 +619,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -642,7 +642,7 @@ var actions = {
         }
       });
     },
-    "linked list": () => {
+    "linked list": (suite) => {
       var first, last, middle;
       first = last = middle = { data: 0 };
       _.times(count - 1, function(t) {
@@ -671,7 +671,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list, middle;
       list = new LinkedList();
       _.times(count - 1, function(t) {
@@ -694,7 +694,7 @@ var actions = {
     }
   },
   sort: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -711,7 +711,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -742,7 +742,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -771,7 +771,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       _.times(count, function(t) {
@@ -804,7 +804,7 @@ var actions = {
     }
   },
   get: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -816,7 +816,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -830,7 +830,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -843,7 +843,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       var middleItem;
@@ -861,7 +861,7 @@ var actions = {
     }
   },
   set: {
-    array: () => {
+    array: (suite) => {
       var array;
       array = _.times(count, function(t) {
         return t;
@@ -878,7 +878,7 @@ var actions = {
         }
       });
     },
-    object: () => {
+    object: (suite) => {
       var object;
       object = { length: 0 };
       _.times(count, function(t) {
@@ -899,7 +899,7 @@ var actions = {
         }
       });
     },
-    map: () => {
+    map: (suite) => {
       var map;
       map = new Map();
       _.times(count, function(t) {
@@ -918,7 +918,7 @@ var actions = {
         }
       });
     },
-    "linked-list@1.0.4": () => {
+    "linked-list@1.0.4": (suite) => {
       var list;
       list = new LinkedList();
       var middleItem;
@@ -952,7 +952,7 @@ if (!action) {
     async.eachOf(types, (type, name, next) => {
       var suite = new Benchmark.Suite(`${name} x${count} pow${t + 1}`);
 
-      type();
+      type(suite);
     
       tb.wrapSuite(suite, next);
       suite.run({ async: true });
@@ -962,7 +962,7 @@ if (!action) {
   async.eachOf(actions['sort'], (type, name, next) => {
     var suite = new Benchmark.Suite(`${name} x${count} pow${t + 1}`);
       
-    type();
+    type(suite);
   
     tb.wrapSuite(suite, next);
     suite.run({ async: true });
