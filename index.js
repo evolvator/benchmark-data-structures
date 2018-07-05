@@ -21,8 +21,6 @@ var t = parseFloat(
 var count = Math.pow(2, t + 1);
 var middleIndex = Math.round((count - 1) / 2);
 
-var suite = new Benchmark.Suite(`${action} x${count} pow${t + 1}`);
-
 var actions = {
   push: {
     array: () => {
@@ -952,6 +950,8 @@ if (!action) {
   async.eachOf(actions, (types, action, next) => {
     if (action === 'sort') return next();
     async.eachOf(types, (type, name, next) => {
+      var suite = new Benchmark.Suite(`${name} x${count} pow${t + 1}`);
+
       type();
     
       tb.wrapSuite(suite, next);
@@ -960,6 +960,8 @@ if (!action) {
   });
 } else {
   async.eachOf(actions['sort'], (type, name, next) => {
+    var suite = new Benchmark.Suite(`${name} x${count} pow${t + 1}`);
+      
     type();
   
     tb.wrapSuite(suite, next);
