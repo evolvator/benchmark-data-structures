@@ -13,10 +13,7 @@ class Item extends LinkedList.Item {
   }
 }
 
-var action =
-  process && process.env && process.env.ACTION ? process.env.ACTION : "push";
-var type =
-  process && process.env && process.env.TYPE ? process.env.TYPE : "array";
+var action = !!(process && process.env && process.env.ACTION ? process.env.ACTION : 0);
 var t = parseFloat(
   process && process.env && process.env.POW ? process.env.POW : 1
 );
@@ -951,9 +948,21 @@ var actions = {
   }
 };
 
-if (actions[action] && actions[action][type]) {
-  actions[action][type]();
-
-  tb.wrapSuite(suite);
-  suite.run({ async: true });
+if (!action) {
+  async.eachOf(actions, (types, action, next) => {
+    if (action === 'sort') return next();
+    async.eachOf(types, (type, name, next) => {
+      type();
+    
+      tb.wrapSuite(suite, next);
+      suite.run({ async: true });
+    }, next);
+  });
+} else {
+  async.eachOf(actions['sort'], (type, name, next) => {
+    type();
+  
+    tb.wrapSuite(suite, next);
+    suite.run({ async: true });
+  });
 }

@@ -11,39 +11,33 @@ install:
 script:
   - npm start
 env:
-  - POW=1 ACTION='push' TYPE='object'
-  - POW=1 ACTION='push' TYPE='map'
-  - POW=1 ACTION='push' TYPE='linked-list'
-  - POW=1 ACTION='push' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='unshift' TYPE='object'
-  - POW=1 ACTION='unshift' TYPE='map'
-  - POW=1 ACTION='unshift' TYPE='linked-list'
-  - POW=1 ACTION='unshift' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='pop' TYPE='object'
-  - POW=1 ACTION='pop' TYPE='map'
-  - POW=1 ACTION='pop' TYPE='linked-list'
-  - POW=1 ACTION='pop' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='shift' TYPE='object'
-  - POW=1 ACTION='shift' TYPE='map'
-  - POW=1 ACTION='shift' TYPE='linked-list'
-  - POW=1 ACTION='shift' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='splice middle -' TYPE='object'
-  - POW=1 ACTION='splice middle -' TYPE='map'
-  - POW=1 ACTION='splice middle -' TYPE='linked-list'
-  - POW=1 ACTION='splice middle -' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='splice middle +' TYPE='object'
-  - POW=1 ACTION='splice middle +' TYPE='map'
-  - POW=1 ACTION='splice middle +' TYPE='linked-list'
-  - POW=1 ACTION='splice middle +' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='sort' TYPE='object'
-  - POW=1 ACTION='sort' TYPE='map'
-  - POW=1 ACTION='sort' TYPE='linked-list'
-  - POW=1 ACTION='sort' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='get' TYPE='object'
-  - POW=1 ACTION='get' TYPE='map'
-  - POW=1 ACTION='get' TYPE='linked-list'
-  - POW=1 ACTION='get' TYPE='linked-list@1.0.4'
-  - POW=1 ACTION='set' TYPE='object'
-  - POW=1 ACTION='set' TYPE='map'
-  - POW=1 ACTION='set' TYPE='linked-list'
-  - POW=1 ACTION='set' TYPE='linked-list@1.0.4'
+  - POW=1 ACTION=0
+  - POW=1 ACTION=1
+  - POW=2 ACTION=0
+  - POW=2 ACTION=1
+  - POW=3 ACTION=0
+  - POW=3 ACTION=1
+  - POW=4 ACTION=0
+  - POW=4 ACTION=1
+  - POW=5 ACTION=0
+  - POW=5 ACTION=1
+  - POW=6 ACTION=0
+  - POW=6 ACTION=1
+  - POW=7 ACTION=0
+  - POW=7 ACTION=1
+  - POW=8 ACTION=0
+  - POW=8 ACTION=1
+  - POW=9 ACTION=0
+  - POW=9 ACTION=1
+  - POW=10 ACTION=0
+  - POW=10 ACTION=1
+  - POW=11 ACTION=0
+  - POW=11 ACTION=1
+  - POW=12 ACTION=0
+  - POW=12 ACTION=1
+  - POW=13 ACTION=0
+  - POW=13 ACTION=1
+  - POW=14 ACTION=0
+  - POW=14 ACTION=1
+  - POW=15 ACTION=0
+  - POW=15 ACTION=1
