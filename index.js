@@ -3,9 +3,7 @@
 var Benchmark = require("benchmark");
 var tb = require("travis-benchmark");
 var _ = require("lodash");
-
 var async = require("async");
-
 var LinkedList = require("linked-list");
 
 class Item extends LinkedList.Item {
