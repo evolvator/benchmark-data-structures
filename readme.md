@@ -2,7 +2,7 @@
 
 What's the fastest data structure tree?
 
-[![Build Status](https://travis-ci.org/evolvator/benchmark-data-structures.svg?branch=master)](https://travis-ci.org/evolvator/benchmark-data-structures)
+[![Build Status](https://travis-ci.org/evolvator/benchmark-data-structures.svg?branch=code)](https://travis-ci.org/evolvator/benchmark-data-structures)
 
 [Executable code](https://github.com/evolvator/benchmark-data-structures/tree/code)
 
